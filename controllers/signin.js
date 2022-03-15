@@ -1,12 +1,16 @@
 const mongoose = require('mongoose');
+const crypto = require('crypto')
+
 const userModel = require('../database_seeds/models/user');
 const mongoosePort = require('../env_variables/env_vars.json').mongoosePort;
 
 mongoose.connect(mongoosePort)
 
-module.exports.signin = (req, res) => {
+class Signin{
+signin = (req, res) => {
     var enteredData = req.body;
-    userModel.find({email: enteredData.email, password: enteredData.password})
+    var pass_shasum = crypto.createHash('sha1').update(req.body.password).digest('hex');
+    userModel.find({email: enteredData.email, password: pass_shasum})
     .then((docs) => {
         if (docs.length == 0){
                 //res.sendStatus(404);
@@ -19,3 +23,5 @@ module.exports.signin = (req, res) => {
             // })
         }
     })}
+}
+module.exports= new Signin;

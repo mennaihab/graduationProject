@@ -21,4 +21,4 @@ const schema = new Schema({
     hotelreviews:{type: String, required: true, unique: true},
 
 })
-module.exports = mongoose.model('hotels', schema);
+module.exports = mongoose.model('Hotels', schema,'Hotels');

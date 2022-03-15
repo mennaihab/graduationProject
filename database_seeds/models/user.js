@@ -1,11 +1,5 @@
 var mongoose = require("mongoose");
-class User {
-    constructor(email,password,username) {
-                this.email = email;
-                this.password = password;
-                this.username = username;
-            }
-    }
+
     const baseOptions = {
         discriminatorKey: 'userType', // our discriminator key, could be anything
         collection: 'Users', // the name of our collection
@@ -19,5 +13,4 @@ class User {
           }, baseOptions,
         ),
       );
-  module.exports = User;
   module.exports = mongoose.model('User');

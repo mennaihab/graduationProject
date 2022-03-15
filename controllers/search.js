@@ -1,40 +1,77 @@
 const mongoose = require('mongoose');
-const hotels = require('../database_seeds/models/hotels');
 const hotelsModel = require("../database_seeds/models/hotels");
-const mongoosePort = require("../env_variables/env_vars.json").mongoosePort;
-const axios = require('axios').default;
-let baseUrl = "mongodb+srv://Narimane:Narimane@cluster0.sdsst.mongodb.net/Project"
+const url = require("../env_variables/env_vars.json").mongoosePort;
+
 
 ///import fetch from 'node-fetch',
-mongoose.connect(mongoosePort)
+mongoose.connect(url)
 
-module.exports.search = (req, res) => {
-  async function getData() {
-    axios.get(baseUrl+"/Hotels")
-  .then(function (response) {
-    // handle success
-    console.log(response);
-    res.send(response.data)
-  })
-  .catch(function (error) {
-    // handle error
-    if(error.response)
-    {
-        let {status ,statusText}=error.response;
-        console.log(status,statusText);
-        res.status(status).send(statusText);
+var HotelsArray = []
+
+  var search = async(req, res, next) => {
+    try {
+      const search_field  = req.body.name;
+      const search_value  = req.body.value;
+      const queryObj = {};
+
+    if (search_field !== '' && search_value !== '') {
+      queryObj[search_field] = search_value;
     }
-    else {
-        console.log(error);
+        HotelsArray = await hotelsModel.find(queryObj,"city name").exec();
+         HotelsArray = [...HotelsArray.map(({name,city})=> {
+           // images = JSON.parse(images.replaceAll(`'`,`"`))
+            return {name,city};
+
+          })];  
+        console.log(HotelsArray);
+        res.json(HotelsArray);
+
+        next()
+    } catch {
+        next()
+        return 'error ocurred'
     }
+}
   
-  })
-  .then(function () {
-    // always executed
-    console.log("data fetched successfully")
-  });
-  }
-   getData();
+   //search();
+   module.exports = { search }
+
+// exports.search = async (req, res) => {
+//   try {
+//     // get search_criteria from query parameter
+//     // build a query object with it
+//     // send data to the frontend
+
+//     const { search_field, search_value } = req.query;
+
+//     const queryObj = {};
+
+//     if (search_field !== '' && search_value !== '') {
+//       queryObj[search_field] = search_value;
+//     }
+
+//     console.log('::queryObj:::', queryObj);
+
+//     const hotels = await hotelsModel.find({city: 'Abu Simbel'}).exec;
+// console.log(hotels);
+//     if (!hotels) {
+//       return res.status(404).json({
+//         status: 'failure',
+//         message: `hotels with the given ${search_field}:${search_value} not found`
+//       });
+//     }
+
+//     res.status(200).json({
+//       status: 'success',
+//       data: hotels
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       status: 'failure',
+//       error: error.message
+//     });
+//   }
+//};
+  
 
  
-}

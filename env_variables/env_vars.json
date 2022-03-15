@@ -1,4 +1,4 @@
 {
-    "mongoosePort" : "mongodb://localhost:27017/project",
+    "mongoosePort" : "mongodb+srv://Narimane:Narimane@cluster0.sdsst.mongodb.net/Project?retryWrites=true&w=majority",
     "KEY" : "secretKey"
 }
