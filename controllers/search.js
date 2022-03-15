@@ -2,13 +2,11 @@ const mongoose = require('mongoose');
 const hotelsModel = require("../database_seeds/models/hotels");
 const url = require("../env_variables/env_vars.json").mongoosePort;
 
-
-///import fetch from 'node-fetch',
 mongoose.connect(url)
 
 var HotelsArray = []
-
-  var search = async(req, res, next) => {
+class Search{
+   search = async(req, res, next) => {
     try {
       const search_field  = req.body.name;
       const search_value  = req.body.value;
@@ -19,7 +17,6 @@ var HotelsArray = []
     }
         HotelsArray = await hotelsModel.find(queryObj,"city name").exec();
          HotelsArray = [...HotelsArray.map(({name,city})=> {
-           // images = JSON.parse(images.replaceAll(`'`,`"`))
             return {name,city};
 
           })];  
@@ -32,9 +29,8 @@ var HotelsArray = []
         return 'error ocurred'
     }
 }
-  
-   //search();
-   module.exports = { search }
+}
+   module.exports = new Search;
 
 // exports.search = async (req, res) => {
 //   try {
